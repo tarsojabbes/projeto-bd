@@ -1,0 +1,40 @@
+-- create MedicoRequisitante table
+CREATE TABLE MedicoRequisitante (
+    codigo NUMBER PRIMARY KEY,
+    cpf VARCHAR2(11),
+    cnpj VARCHAR2(14),
+    CRM_numero VARCHAR2(6),
+    CRM_estado VARCHAR2(2),
+    nome VARCHAR2(100),
+    especialidade VARCHAR2(100),
+    rua VARCHAR2(100),
+    bairro VARCHAR2(100),
+    cidade VARCHAR2(100),
+    estado VARCHAR2(20),
+    cep VARCHAR2(8)
+);
+
+-- create FoneMedicoRequisitante table
+CREATE TABLE Fone_medico_requisitante (
+    codigo NUMBER,
+    numero VARCHAR2(11),
+    PRIMARY KEY (codigo, numero),
+    CONSTRAINT fk_medico_requisitante_fone FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
+);
+
+-- create MedicoElaborador table
+CREATE TABLE MedicoElaborador (
+    codigo NUMBER PRIMARY KEY,
+    cpf VARCHAR2(11),
+    cnpj VARCHAR2(14),
+    CRM_numero VARCHAR2(6),
+    CRM_estado VARCHAR2(2),
+    nome VARCHAR2(100),
+    especialidade VARCHAR2(100),
+    endereco VARCHAR2(200),
+    telefone VARCHAR2(11),
+    salario NUMBER(8, 2),
+    carga_horaria NUMBER,
+    data_admissao DATE,
+    data_demissao DATE
+);
