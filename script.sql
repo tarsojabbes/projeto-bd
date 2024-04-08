@@ -6,8 +6,13 @@ DROP TABLE Fone_medico_requisitante;
 DROP TABLE MedicoRequisitante;
 DROP TABLE MedicoElaborador;
 DROP TABLE convenio;
+DROP TABLE dependente;
+DROP TABLE contrata_paciente_convenio;
 DROP SEQUENCE exame_seq;
 DROP SEQUENCE atendimento_seq;
+DROP SEQUENCE dependente_seq;
+DROP SEQUENCE contrata_paciente_convenio_seq;
+
 
 -- create Paciente table
 CREATE TABLE paciente (
@@ -114,4 +119,38 @@ CREATE TABLE atendimento (
     CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
     hora DATE,
     data_atendimento DATE
+);
+
+-- create dependente sequence
+CREATE SEQUENCE dependente_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- create Dependente table
+CREATE TABLE dependente (
+    codigo NUMBER DEFAULT dependente_seq.nextval,
+    codigo_medico_elaborador NUMBER,
+    nome VARCHAR2(100),
+    idade INT,
+    sexo CHAR(1),
+    CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
+);
+
+-- create contrata_paciente_convenio sequence
+CREATE SEQUENCE contrata_paciente_convenio_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- create Contrata paciente-convenio table
+CREATE TABLE contrata_paciente_convenio (
+    numero NUMBER DEFAULT contrata_paciente_convenio_seq.nextval,
+    cpf VARCHAR2(11),
+    codigo_ANS VARCHAR2(50),
+    data_expiracao DATE,
+    CONSTRAINT fk_cpf FOREIGN KEY(cpf) REFERENCES Paciente(numero),
+    CONSTRAINT fk_codigo_ANS FOREIGN KEY(codigo_ANS) REFERENCES Convenio(numero)
 );
