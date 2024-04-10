@@ -40,12 +40,13 @@ CREATE TABLE Fone_paciente (
 CREATE TABLE Contrata_paciente_convenio (
     cpf VARCHAR2(11),
     codigo_ANS VARCHAR2(20),
-    data_expiracao DATE,
-    numero VARCHAR2(20),
+    data_expiracao DATE NOT NULL,
+    numero VARCHAR2(20) NOT NULL,
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
     FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
+-- faltou criar as sequencias pro codigo de medicoreq e medicoelab
 -- create MedicoRequisitante table
 CREATE TABLE MedicoRequisitante (
     codigo NUMBER PRIMARY KEY,
