@@ -17,16 +17,16 @@ DROP SEQUENCE contrata_paciente_convenio_seq;
 -- create Paciente table
 CREATE TABLE paciente (
     cpf VARCHAR2(11) PRIMARY KEY,
-    email VARCHAR2(100),
-    data_nascimento DATE,
-    nome VARCHAR2(100),
-    sexo CHAR(1),
-    rua VARCHAR2(100),
-    numero VARCHAR2(10),
-    bairro VARCHAR2(100),
-    cidade VARCHAR2(100),
-    estado CHAR(2),
-    CEP VARCHAR2(8)
+    email VARCHAR2(100) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    nome VARCHAR2(100) NOT NULL,
+    sexo CHAR(1) NOT NULL,
+    rua VARCHAR2(100) NOT NULL,
+    numero VARCHAR2(10) NOT NULL,
+    bairro VARCHAR2(100) NOT NULL,
+    cidade VARCHAR2(100) NOT NULL,
+    estado CHAR(2) NOT NULL,
+    CEP VARCHAR2(8) NOT NULL
 );
 
 CREATE TABLE Fone_paciente (
@@ -48,17 +48,17 @@ CREATE TABLE Contrata_paciente_convenio (
 -- create MedicoRequisitante table
 CREATE TABLE MedicoRequisitante (
     codigo NUMBER PRIMARY KEY,
-    cpf VARCHAR2(11),
-    cnpj VARCHAR2(14),
-    CRM_numero VARCHAR2(6),
-    CRM_estado VARCHAR2(2),
-    nome VARCHAR2(100),
-    especialidade VARCHAR2(100),
-    rua VARCHAR2(100),
-    bairro VARCHAR2(100),
-    cidade VARCHAR2(100),
-    estado VARCHAR2(20),
-    cep VARCHAR2(8)
+    cpf VARCHAR2(11) NOT NULL,
+    cnpj VARCHAR2(14) NOT NULL,
+    CRM_numero VARCHAR2(6) NOT NULL,
+    CRM_estado VARCHAR2(2) NOT NULL,
+    nome VARCHAR2(100) NOT NULL,
+    especialidade VARCHAR2(100) NOT NULL,
+    rua VARCHAR2(100) NOT NULL,
+    bairro VARCHAR2(100) NOT NULL,
+    cidade VARCHAR2(100) NOT NULL,
+    estado VARCHAR2(20) NOT NULL,
+    cep VARCHAR2(8) NOT NULL
 );
 
 -- create FoneMedicoRequisitante table
@@ -72,17 +72,17 @@ CREATE TABLE Fone_medico_requisitante (
 -- create MedicoElaborador table
 CREATE TABLE MedicoElaborador (
     codigo NUMBER PRIMARY KEY,
-    cpf VARCHAR2(11),
-    cnpj VARCHAR2(14),
-    CRM_numero VARCHAR2(6),
-    CRM_estado VARCHAR2(2),
-    nome VARCHAR2(100),
-    especialidade VARCHAR2(100),
-    endereco VARCHAR2(200),
-    telefone VARCHAR2(11),
-    salario NUMBER(8, 2),
-    carga_horaria NUMBER,
-    data_admissao DATE,
+    cpf VARCHAR2(11) NOT NULL,
+    cnpj VARCHAR2(14) NOT NULL,
+    CRM_numero VARCHAR2(6) NOT NULL,
+    CRM_estado VARCHAR2(2) NOT NULL,
+    nome VARCHAR2(100) NOT NULL,
+    especialidade VARCHAR2(100) NOT NULL,
+    endereco VARCHAR2(200) NOT NULL,
+    telefone VARCHAR2(11) NOT NULL,
+    salario NUMBER(8, 2) NOT NULL,
+    carga_horaria NUMBER NOT NULL,
+    data_admissao DATE NOT NULL,
     data_demissao DATE
 );
 
@@ -97,22 +97,22 @@ CREATE SEQUENCE exame_seq
 -- create Exame table
 CREATE TABLE exame (
     codigo NUMBER DEFAULT exame_seq.nextval PRIMARY KEY,
-    nome_exame VARCHAR2(200),
-    material_colheita VARCHAR2(200),
-    classe_exame VARCHAR2(200),
-    substancias_usadas VARCHAR2(500),
-    metodo VARCHAR2(200),
-    prazo_exame DATE,
-    valores_de_referencia VARCHAR2(200),
+    nome_exame VARCHAR2(200) NOT NULL,
+    material_colheita VARCHAR2(200) NOT NULL,
+    classe_exame VARCHAR2(200) NOT NULL,
+    substancias_usadas VARCHAR2(500) NOT NULL,
+    metodo VARCHAR2(200) NOT NULL,
+    prazo_exame DATE NOT NULL,
+    valores_de_referencia VARCHAR2(200) NOT NULL,
     nota VARCHAR2(500),
-    unidade VARCHAR2(200),
+    unidade VARCHAR2(200) NOT NULL,
     CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY (codigo) REFERENCES MedicoElaborador(codigo)
 );
 
 -- create Convenio table
 CREATE TABLE convenio (
     codigo_ans VARCHAR2(50) PRIMARY KEY,
-    nome VARCHAR2(100)
+    nome VARCHAR2(100) NOT NULL
 );
 
 -- create atendimento sequence
@@ -133,8 +133,8 @@ CREATE TABLE atendimento (
     CONSTRAINT fk_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf), 
     CONSTRAINT fk_codigo_medico_requisitante FOREIGN KEY (codigo_medico_requisitante) REFERENCES MedicoRequisitante(codigo),
     CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
-    hora DATE,
-    data_atendimento DATE
+    hora DATE NOT NULL,
+    data_atendimento DATE NOT NULL
 );
 
 -- create dependente sequence
