@@ -29,6 +29,22 @@ CREATE TABLE paciente (
     CEP VARCHAR2(8)
 );
 
+CREATE TABLE Fone_paciente (
+    cpf VARCHAR2(11),
+    numero VARCHAR2(20),
+    FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
+);
+
+
+CREATE TABLE Contrata_paciente_convenio (
+    cpf VARCHAR2(11),
+    codigo_ANS VARCHAR2(20),
+    data_expiracao DATE,
+    numero VARCHAR2(20),
+    FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
+    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+);
+
 -- create MedicoRequisitante table
 CREATE TABLE MedicoRequisitante (
     codigo NUMBER PRIMARY KEY,
