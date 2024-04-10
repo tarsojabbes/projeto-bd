@@ -36,10 +36,10 @@ CREATE TABLE Fone_paciente (
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
 );
 
--- faltou declarar quem seria a chave primária, no caso a combinaçaõ entre paciente e convênio
 CREATE TABLE Contrata_paciente_convenio (
     cpf VARCHAR2(11),
     codigo_ANS VARCHAR2(20),
+    PRIMARY KEY (cpf, codigo_ANS),
     data_expiracao DATE NOT NULL,
     numero VARCHAR2(20) NOT NULL,
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
@@ -147,10 +147,10 @@ CREATE SEQUENCE dependente_seq
     NOCYCLE;
 
 -- create Dependente table
--- faltou indicar qual é a primary key (codigo, codigo_medico_elaborador)
 CREATE TABLE dependente (
     codigo NUMBER DEFAULT dependente_seq.nextval,
     codigo_medico_elaborador NUMBER,
+    PRIMARY KEY (codigo, codigo_medico_elaborador),
     nome VARCHAR2(100) NOT NULL,
     idade INT NOT NULL,
     sexo CHAR(1) NOT NULL,
@@ -163,14 +163,3 @@ CREATE SEQUENCE contrata_paciente_convenio_seq
     INCREMENT BY 1
     NOCACHE
     NOCYCLE;
-
--- create Contrata paciente-convenio table
--- acho que isso aqui tá repetido
-CREATE TABLE contrata_paciente_convenio (
-    numero NUMBER DEFAULT contrata_paciente_convenio_seq.nextval,
-    cpf VARCHAR2(11),
-    codigo_ANS VARCHAR2(50),
-    data_expiracao DATE,
-    CONSTRAINT fk_cpf FOREIGN KEY(cpf) REFERENCES Paciente(numero),
-    CONSTRAINT fk_codigo_ANS FOREIGN KEY(codigo_ANS) REFERENCES Convenio(numero)
-);
