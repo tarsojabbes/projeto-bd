@@ -29,13 +29,14 @@ CREATE TABLE paciente (
     CEP VARCHAR2(8) NOT NULL
 );
 
+-- acho que paciente nao tem um fone
 CREATE TABLE Fone_paciente (
     cpf VARCHAR2(11),
     numero VARCHAR2(20),
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
 );
 
-
+-- faltou declarar quem seria a chave primária, no caso a combinaçaõ entre paciente e convênio
 CREATE TABLE Contrata_paciente_convenio (
     cpf VARCHAR2(11),
     codigo_ANS VARCHAR2(20),
@@ -145,12 +146,13 @@ CREATE SEQUENCE dependente_seq
     NOCYCLE;
 
 -- create Dependente table
+-- faltou indicar qual é a primary key (codigo, codigo_medico_elaborador)
 CREATE TABLE dependente (
     codigo NUMBER DEFAULT dependente_seq.nextval,
     codigo_medico_elaborador NUMBER,
-    nome VARCHAR2(100),
-    idade INT,
-    sexo CHAR(1),
+    nome VARCHAR2(100) NOT NULL,
+    idade INT NOT NULL,
+    sexo CHAR(1) NOT NULL,
     CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
 );
 
@@ -162,6 +164,7 @@ CREATE SEQUENCE contrata_paciente_convenio_seq
     NOCYCLE;
 
 -- create Contrata paciente-convenio table
+-- acho que isso aqui tá repetido
 CREATE TABLE contrata_paciente_convenio (
     numero NUMBER DEFAULT contrata_paciente_convenio_seq.nextval,
     cpf VARCHAR2(11),
