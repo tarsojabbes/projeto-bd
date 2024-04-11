@@ -6,6 +6,7 @@ DROP TABLE dependente;
 DROP TABLE MedicoRequisitante;
 DROP TABLE MedicoElaborador;
 DROP TABLE contrata_paciente_convenio;
+DROP TABLE fone_paciente;
 DROP TABLE paciente;
 DROP TABLE convenio;
 DROP SEQUENCE exame_seq;
@@ -27,6 +28,13 @@ CREATE TABLE paciente (
     cidade VARCHAR2(100) NOT NULL,
     estado CHAR(2) NOT NULL,
     CEP VARCHAR2(8) NOT NULL
+);
+
+CREATE TABLE Fone_paciente (
+    cpf VARCHAR2(11),
+    numero VARCHAR2(20),
+    PRIMARY KEY(cpf, numero),
+    FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
 );
 
 -- faltou criar as sequencias pro codigo de medicoreq e medicoelab
