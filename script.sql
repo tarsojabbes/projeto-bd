@@ -199,7 +199,7 @@ CREATE TABLE Requisita_medico_requisitante_exame (
 CREATE TABLE Prove_exame_convenio (
     codigo NUMBER,
     codigo_ANS VARCHAR2(50),
-    preco NUMBER,
+    preco NUMBER NOT NULL,
     PRIMARY KEY (codigo, codigo_ANS),
     FOREIGN KEY (codigo) REFERENCES Exame(codigo),
     FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
