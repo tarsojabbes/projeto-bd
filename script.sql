@@ -9,6 +9,7 @@ DROP TABLE contrata_paciente_convenio;
 DROP TABLE fone_paciente;
 DROP TABLE paciente;
 DROP TABLE convenio;
+DROP TABLE requisita_medico_requisitante_exame;
 DROP SEQUENCE exame_seq;
 DROP SEQUENCE atendimento_seq;
 DROP SEQUENCE dependente_seq;
@@ -60,6 +61,23 @@ CREATE TABLE Fone_medico_requisitante (
     numero VARCHAR2(11),
     PRIMARY KEY (codigo, numero),
     CONSTRAINT fk_medico_requisitante_fone FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
+);
+
+CREATE TABLE Requisita_medico_requisitante_exame (
+    codigo NUMBER,
+    codigo_exame NUMBER,
+    PRIMARY KEY (codigo, codigo_exame),
+    FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
+    FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
+);
+
+CREATE TABLE Prove_exame_convenio (
+    codigo NUMBER,
+    codigo_ANS VARCHAR2(50),
+    preco NUMBER,
+    PRIMARY KEY (codigo, codigo_ANS),
+    FOREIGN KEY (codigo) REFERENCES Exame(codigo),
+    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
 -- create MedicoElaborador table
