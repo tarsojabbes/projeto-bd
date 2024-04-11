@@ -1,13 +1,13 @@
 -- drop all tables and sequences
 DROP TABLE atendimento;
-DROP TABLE paciente;
 DROP TABLE exame;
 DROP TABLE Fone_medico_requisitante;
+DROP TABLE dependente;
 DROP TABLE MedicoRequisitante;
 DROP TABLE MedicoElaborador;
-DROP TABLE convenio;
-DROP TABLE dependente;
 DROP TABLE contrata_paciente_convenio;
+DROP TABLE paciente;
+DROP TABLE convenio;
 DROP SEQUENCE exame_seq;
 DROP SEQUENCE atendimento_seq;
 DROP SEQUENCE dependente_seq;
@@ -27,23 +27,6 @@ CREATE TABLE paciente (
     cidade VARCHAR2(100) NOT NULL,
     estado CHAR(2) NOT NULL,
     CEP VARCHAR2(8) NOT NULL
-);
-
--- acho que paciente nao tem um fone
-CREATE TABLE Fone_paciente (
-    cpf VARCHAR2(11),
-    numero VARCHAR2(20),
-    FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
-);
-
-CREATE TABLE Contrata_paciente_convenio (
-    cpf VARCHAR2(11),
-    codigo_ANS VARCHAR2(20),
-    PRIMARY KEY (cpf, codigo_ANS),
-    data_expiracao DATE NOT NULL,
-    numero VARCHAR2(20) NOT NULL,
-    FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
-    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
 -- faltou criar as sequencias pro codigo de medicoreq e medicoelab
@@ -154,7 +137,7 @@ CREATE TABLE dependente (
     nome VARCHAR2(100) NOT NULL,
     idade INT NOT NULL,
     sexo CHAR(1) NOT NULL,
-    CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
+    CONSTRAINT fk_dep_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
 );
 
 -- create contrata_paciente_convenio sequence
@@ -163,3 +146,13 @@ CREATE SEQUENCE contrata_paciente_convenio_seq
     INCREMENT BY 1
     NOCACHE
     NOCYCLE;
+
+CREATE TABLE Contrata_paciente_convenio (
+    cpf VARCHAR2(11),
+    codigo_ANS VARCHAR2(20),
+    PRIMARY KEY (cpf, codigo_ANS),
+    data_expiracao DATE NOT NULL,
+    numero VARCHAR2(20) NOT NULL,
+    FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
+    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+);
