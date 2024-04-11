@@ -10,6 +10,7 @@ DROP TABLE fone_paciente;
 DROP TABLE paciente;
 DROP TABLE convenio;
 DROP TABLE requisita_medico_requisitante_exame;
+DROP TABLE Prove_exame_convenio;
 DROP SEQUENCE exame_seq;
 DROP SEQUENCE atendimento_seq;
 DROP SEQUENCE dependente_seq;
@@ -63,6 +64,7 @@ CREATE TABLE Fone_medico_requisitante (
     CONSTRAINT fk_medico_requisitante_fone FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
 );
 
+-- create RequisitaMedicoRequisitanteExame table
 CREATE TABLE Requisita_medico_requisitante_exame (
     codigo NUMBER,
     codigo_exame NUMBER,
@@ -71,6 +73,7 @@ CREATE TABLE Requisita_medico_requisitante_exame (
     FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
 );
 
+-- create ProveExameConvenio table
 CREATE TABLE Prove_exame_convenio (
     codigo NUMBER,
     codigo_ANS VARCHAR2(50),
