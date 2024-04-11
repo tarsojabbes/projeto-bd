@@ -185,3 +185,22 @@ CREATE TABLE Contrata_paciente_convenio (
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
     FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
+
+-- create RequisitaMedicoRequisitanteExame table
+CREATE TABLE Requisita_medico_requisitante_exame (
+    codigo NUMBER,
+    codigo_exame NUMBER,
+    PRIMARY KEY (codigo, codigo_exame),
+    FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
+    FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
+);
+
+-- create ProveExameConvenio table
+CREATE TABLE Prove_exame_convenio (
+    codigo NUMBER,
+    codigo_ANS VARCHAR2(50),
+    preco NUMBER,
+    PRIMARY KEY (codigo, codigo_ANS),
+    FOREIGN KEY (codigo) REFERENCES Exame(codigo),
+    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+);
