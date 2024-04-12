@@ -1,17 +1,20 @@
 -- drop all tables and sequences
 DROP TABLE atendimento;
-DROP TABLE exame;
 DROP TABLE Fone_medico_requisitante;
 DROP TABLE dependente;
-DROP TABLE MedicoRequisitante;
-DROP TABLE MedicoElaborador;
 DROP TABLE contrata_paciente_convenio;
 DROP TABLE fone_paciente;
 DROP TABLE paciente;
-DROP TABLE convenio;
 DROP TABLE requisita_medico_requisitante_exame;
 DROP TABLE Prove_exame_convenio;
+DROP TABLE exame;
+DROP TABLE MedicoRequisitante;
+DROP TABLE MedicoElaborador;
+DROP TABLE fone_convenio;
+DROP TABLE convenio;
+DROP TABLE formas_de_pagamento;
 DROP SEQUENCE exame_seq;
+DROP SEQUENCE formas_de_pagamento_seq;
 DROP SEQUENCE atendimento_seq;
 DROP SEQUENCE dependente_seq;
 DROP SEQUENCE contrata_paciente_convenio_seq;
@@ -38,56 +41,6 @@ CREATE TABLE Fone_paciente (
     numero VARCHAR2(20),
     PRIMARY KEY(cpf, numero),
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
-);
-
--- create MedicoRequisitante sequence
-CREATE SEQUENCE medicoreq_seq
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
-
--- create MedicoRequisitante table
-CREATE TABLE MedicoRequisitante (
-    codigo NUMBER DEFAULT medicoreq_seq.nextval PRIMARY KEY,
-    cpf VARCHAR2(11) NOT NULL,
-    cnpj VARCHAR2(14) NOT NULL,
-    CRM_numero VARCHAR2(6) NOT NULL,
-    CRM_estado VARCHAR2(2) NOT NULL,
-    nome VARCHAR2(100) NOT NULL,
-    especialidade VARCHAR2(100) NOT NULL,
-    rua VARCHAR2(100) NOT NULL,
-    bairro VARCHAR2(100) NOT NULL,
-    cidade VARCHAR2(100) NOT NULL,
-    estado VARCHAR2(20) NOT NULL,
-    cep VARCHAR2(8) NOT NULL
-);
-
--- create FoneMedicoRequisitante table
-CREATE TABLE Fone_medico_requisitante (
-    codigo NUMBER,
-    numero VARCHAR2(11),
-    PRIMARY KEY (codigo, numero),
-    CONSTRAINT fk_medico_requisitante_fone FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
-);
-
--- create RequisitaMedicoRequisitanteExame table
-CREATE TABLE Requisita_medico_requisitante_exame (
-    codigo NUMBER,
-    codigo_exame NUMBER,
-    PRIMARY KEY (codigo, codigo_exame),
-    FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
-    FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
-);
-
--- create ProveExameConvenio table
-CREATE TABLE Prove_exame_convenio (
-    codigo NUMBER,
-    codigo_ANS VARCHAR2(50),
-    preco NUMBER,
-    PRIMARY KEY (codigo, codigo_ANS),
-    FOREIGN KEY (codigo) REFERENCES Exame(codigo),
-    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
 -- create MedicoElaborador sequence
@@ -140,7 +93,79 @@ CREATE TABLE exame (
 -- create Convenio table
 CREATE TABLE convenio (
     codigo_ans VARCHAR2(50) PRIMARY KEY,
-    nome VARCHAR2(100) NOT NULL
+    codigo_operadora VARCHAR2(50),
+    cnpj VARCHAR2(14) NOT NULL,
+    nome VARCHAR2(100) NOT NULL,
+    endereco VARCHAR2(200) NOT NULL,
+    email VARCHAR2(100) NOT NULL
+);
+
+CREATE TABLE fone_convenio (
+    codigo_ans VARCHAR2(50),
+    numero VARCHAR2(11),
+    PRIMARY KEY(codigo_ans, numero),
+    CONSTRAINT fk_codigo_ans_fone_convenio FOREIGN KEY (codigo_ans) REFERENCES convenio(codigo_ans)
+);
+
+-- create MedicoRequisitante sequence
+CREATE SEQUENCE medicoreq_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- create MedicoRequisitante table
+CREATE TABLE MedicoRequisitante (
+    codigo NUMBER DEFAULT medicoreq_seq.nextval PRIMARY KEY,
+    cpf VARCHAR2(11) NOT NULL,
+    cnpj VARCHAR2(14) NOT NULL,
+    CRM_numero VARCHAR2(6) NOT NULL,
+    CRM_estado VARCHAR2(2) NOT NULL,
+    nome VARCHAR2(100) NOT NULL,
+    especialidade VARCHAR2(100) NOT NULL,
+    rua VARCHAR2(100) NOT NULL,
+    bairro VARCHAR2(100) NOT NULL,
+    cidade VARCHAR2(100) NOT NULL,
+    estado VARCHAR2(20) NOT NULL,
+    cep VARCHAR2(8) NOT NULL
+);
+
+-- create FoneMedicoRequisitante table
+CREATE TABLE Fone_medico_requisitante (
+    codigo NUMBER,
+    numero VARCHAR2(11),
+    PRIMARY KEY (codigo, numero),
+    CONSTRAINT fk_medico_requisitante_fone FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
+);
+
+-- create RequisitaMedicoRequisitanteExame table
+CREATE TABLE Requisita_medico_requisitante_exame (
+    codigo NUMBER,
+    codigo_exame NUMBER,
+    PRIMARY KEY (codigo, codigo_exame),
+    FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
+    FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
+);
+
+-- create ProveExameConvenio table
+CREATE TABLE Prove_exame_convenio (
+    codigo NUMBER,
+    codigo_ANS VARCHAR2(50),
+    preco NUMBER,
+    PRIMARY KEY (codigo, codigo_ANS),
+    FOREIGN KEY (codigo) REFERENCES Exame(codigo),
+    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+);
+
+CREATE SEQUENCE formas_de_pagamento_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE TABLE formas_de_pagamento (
+    id NUMBER DEFAULT formas_de_pagamento_seq.nextval PRIMARY KEY,
+    forma VARCHAR2(100) NOT NULL
 );
 
 -- create atendimento sequence
@@ -197,24 +222,5 @@ CREATE TABLE Contrata_paciente_convenio (
     data_expiracao DATE NOT NULL,
     numero VARCHAR2(20) NOT NULL,
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
-    FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
-);
-
--- create RequisitaMedicoRequisitanteExame table
-CREATE TABLE Requisita_medico_requisitante_exame (
-    codigo NUMBER,
-    codigo_exame NUMBER,
-    PRIMARY KEY (codigo, codigo_exame),
-    FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
-    FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
-);
-
--- create ProveExameConvenio table
-CREATE TABLE Prove_exame_convenio (
-    codigo NUMBER,
-    codigo_ANS VARCHAR2(50),
-    preco NUMBER NOT NULL,
-    PRIMARY KEY (codigo, codigo_ANS),
-    FOREIGN KEY (codigo) REFERENCES Exame(codigo),
     FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
