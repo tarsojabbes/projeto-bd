@@ -11,14 +11,14 @@ CREATE TABLE paciente (
     cidade VARCHAR2(100) NOT NULL,
     estado CHAR(2) NOT NULL,
     CEP VARCHAR2(8) NOT NULL,
-    CONSTRAINT PRIMARY KEY(cpf)
+    CONSTRAINT pk_cpf_paciente PRIMARY KEY(cpf)
 );
 
 CREATE TABLE Fone_paciente (
     cpf VARCHAR2(11),
     numero VARCHAR2(20),
-    PRIMARY KEY(cpf, numero),
-    FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
+    CONSTRAINT pk_fone_paciente PRIMARY KEY(cpf, numero),
+    CONSTRAINT fk_fone_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
 );
 
 -- create MedicoElaborador sequence
@@ -43,7 +43,7 @@ CREATE TABLE MedicoElaborador (
     carga_horaria NUMBER NOT NULL,
     data_admissao DATE NOT NULL,
     data_demissao DATE,
-    CONSTRAINT PRIMARY KEY(codigo)
+    CONSTRAINT pk_codigo_elaborador PRIMARY KEY(codigo)
 );
 
 -- create exame sequence
@@ -67,7 +67,7 @@ CREATE TABLE exame (
     nota VARCHAR2(500),
     unidade VARCHAR2(200) NOT NULL,
     CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY (codigo) REFERENCES MedicoElaborador(codigo),
-    CONSTRAINT PRIMARY KEY(codigo)
+    CONSTRAINT pk_codigo_exame PRIMARY KEY(codigo)
 );
 
 -- create Convenio table
@@ -78,13 +78,13 @@ CREATE TABLE convenio (
     nome VARCHAR2(100) NOT NULL,
     endereco VARCHAR2(200) NOT NULL,
     email VARCHAR2(100) NOT NULL,
-    CONSTRAINT PRIMARY KEY(codigo_ans)
+    CONSTRAINT pk_codigo_ans_convenio PRIMARY KEY(codigo_ans)
 );
 
 CREATE TABLE fone_convenio (
     codigo_ans VARCHAR2(50),
     numero VARCHAR2(11),
-    CONSTRAINT PRIMARY KEY(codigo_ans, numero),
+    CONSTRAINT pk_fone_convenio PRIMARY KEY(codigo_ans, numero),
     CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES convenio(codigo_ans)
 );
 
@@ -109,14 +109,14 @@ CREATE TABLE MedicoRequisitante (
     cidade VARCHAR2(100) NOT NULL,
     estado VARCHAR2(20) NOT NULL,
     cep VARCHAR2(8) NOT NULL,
-    CONSTRAINT PRIMARY KEY(codigo)
+    CONSTRAINT pk_codigo_requisitante PRIMARY KEY(codigo)
 );
 
 -- create FoneMedicoRequisitante table
 CREATE TABLE Fone_medico_requisitante (
     codigo NUMBER,
     numero VARCHAR2(11),
-    CONSTRAINT PRIMARY KEY (codigo, numero),
+    CONSTRAINT pk_fone_medico_requisitante PRIMARY KEY (codigo, numero),
     CONSTRAINT fk_fone_medico_requisitante FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
 );
 
@@ -124,9 +124,9 @@ CREATE TABLE Fone_medico_requisitante (
 CREATE TABLE Requisita_medico_requisitante_exame (
     codigo NUMBER,
     codigo_exame NUMBER,
-    CONSTRAINT PRIMARY KEY (codigo, codigo_exame),
-    CONSTRAINT FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
-    CONSTRAINT FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
+    CONSTRAINT pk_requisita_medico PRIMARY KEY (codigo, codigo_exame),
+    CONSTRAINT fk_requisita_medico_codigo_medico FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo),
+    CONSTRAINT fk_requisita_medico_codigo_exame FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
 );
 
 -- create ProveExameConvenio table
@@ -134,9 +134,9 @@ CREATE TABLE Prove_exame_convenio (
     codigo NUMBER,
     codigo_ANS VARCHAR2(50),
     preco NUMBER,
-    CONSTRAINT PRIMARY KEY (codigo, codigo_ANS),
-    CONSTRAINT FOREIGN KEY (codigo) REFERENCES Exame(codigo),
-    CONSTRAINT FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+    CONSTRAINT pk_prove_exame_convenio PRIMARY KEY (codigo, codigo_ANS),
+    CONSTRAINT fk_prove_exame_codigo FOREIGN KEY (codigo) REFERENCES Exame(codigo),
+    CONSTRAINT fk_prove_convenio_codigo FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
 CREATE SEQUENCE formas_de_pagamento_seq
@@ -148,7 +148,7 @@ CREATE SEQUENCE formas_de_pagamento_seq
 CREATE TABLE formas_de_pagamento (
     id NUMBER DEFAULT formas_de_pagamento_seq.nextval,
     forma VARCHAR2(100) NOT NULL,
-    CONSTRAINT PRIMARY KEY (id),
+    CONSTRAINT pk_id_formas_de_pagamento PRIMARY KEY (id),
 );
 
 -- create atendimento sequence
@@ -164,10 +164,10 @@ CREATE TABLE atendimento (
     cpf VARCHAR2(11),
     codigo_medico_requisitante NUMBER,
     codigo_ans VARCHAR2(50),
-    CONSTRAINT PRIMARY KEY (codigo),
-    CONSTRAINT fk_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf), 
-    CONSTRAINT fk_codigo_medico_requisitante FOREIGN KEY (codigo_medico_requisitante) REFERENCES MedicoRequisitante(codigo),
-    CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
+    CONSTRAINT pk_atendimento PRIMARY KEY (codigo),
+    CONSTRAINT fk_atendimento_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf), 
+    CONSTRAINT fk_atendimento_codigo_medico_requisitante FOREIGN KEY (codigo_medico_requisitante) REFERENCES MedicoRequisitante(codigo),
+    CONSTRAINT fk_atendimento_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
     hora DATE NOT NULL,
     data_atendimento DATE NOT NULL
 );
@@ -180,7 +180,7 @@ CREATE TABLE requere_atendimento_exame (
     timestamp_coleta TIMESTAMP,
     timestamp_liberacao TIMESTAMP,
     preco NUMBER,
-    CONSTRAINT PRIMARY KEY (codigo_atendimento, codigo_exame),
+    CONSTRAINT pk_requerimento PRIMARY KEY (codigo_atendimento, codigo_exame),
     CONSTRAINT fk_codigo_atendimento_requerimento FOREIGN KEY (codigo_atendimento) REFERENCES Atendimento(codigo),
     CONSTRAINT fk_codigo_exame_requerimento FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
 );
@@ -189,7 +189,7 @@ CREATE TABLE requere_atendimento_exame (
 CREATE TABLE atende_medico_requisitante_convenio (
     codigo NUMBER,
     codigo_ans VARCHAR2(50),
-    CONSTRAINT PRIMARY KEY (codigo, codigo_ans),
+    CONSTRAINT pk_atendimento_medico_convenio PRIMARY KEY (codigo, codigo_ans),
     CONSTRAINT fk_codigo_ans_convenio_atendimento FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
     CONSTRAINT fk_codigo_medico_requisitante_atendimento FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
 );
@@ -199,7 +199,7 @@ CREATE TABLE esta_atendimento_formas_pagamento (
     codigo NUMBER,
     id_formas_pagamento NUMBER, 
     valor NUMBER,
-    CONSTRAINT PRIMARY KEY (codigo, id_formas_pagamento),
+    CONSTRAINT pk_atendimento_formas_pagamento PRIMARY KEY (codigo, id_formas_pagamento),
     CONSTRAINT fk_codigo_atendimento_valor FOREIGN KEY (codigo) REFERENCES Atendimento(codigo),
     CONSTRAINT fk_codigo_formas_pagamento_atendimento FOREIGN KEY (id_formas_pagamento) REFERENCES formas_de_pagamento(id)
 );
@@ -215,11 +215,11 @@ CREATE SEQUENCE dependente_seq
 CREATE TABLE dependente (
     codigo NUMBER DEFAULT dependente_seq.nextval,
     codigo_medico_elaborador NUMBER,
-    CONSTRAINT PRIMARY KEY (codigo, codigo_medico_elaborador),
+    CONSTRAINT pk_dependente PRIMARY KEY (codigo, codigo_medico_elaborador),
     nome VARCHAR2(100) NOT NULL,
     idade INT NOT NULL,
     sexo CHAR(1) NOT NULL,
-    CONSTRAINT fk_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
+    CONSTRAINT fk_dependente_codigo_medico_elaborador FOREIGN KEY(codigo_medico_elaborador) REFERENCES MedicoElaborador(codigo)
 );
 
 -- create contrata_paciente_convenio sequence
@@ -232,11 +232,11 @@ CREATE SEQUENCE contrata_paciente_convenio_seq
 CREATE TABLE Contrata_paciente_convenio (
     cpf VARCHAR2(11),
     codigo_ANS VARCHAR2(20),
-    CONSTRAINT PRIMARY KEY (cpf, codigo_ANS),
+    CONSTRAINT pk_contrato_paciente_convenio PRIMARY KEY (cpf, codigo_ANS),
     data_expiracao DATE NOT NULL,
     numero VARCHAR2(20) NOT NULL,
-    CONSTRAINT fk_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
-    CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
+    CONSTRAINT fk_contrato_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf),
+    CONSTRAINT fk_contrato_codigo_ans_convenio FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
 -- drop all tables and sequences
