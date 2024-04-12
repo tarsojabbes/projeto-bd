@@ -164,12 +164,44 @@ CREATE TABLE atendimento (
     cpf VARCHAR2(11),
     codigo_medico_requisitante NUMBER,
     codigo_ans VARCHAR2(50),
-    CONSTRAINT PRIMARY KEY (codigo, cpf, codigo_medico_requisitante, codigo_ans),
+    CONSTRAINT PRIMARY KEY (codigo),
     CONSTRAINT fk_cpf_paciente FOREIGN KEY (cpf) REFERENCES Paciente(cpf), 
     CONSTRAINT fk_codigo_medico_requisitante FOREIGN KEY (codigo_medico_requisitante) REFERENCES MedicoRequisitante(codigo),
     CONSTRAINT fk_codigo_ans_convenio FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
     hora DATE NOT NULL,
     data_atendimento DATE NOT NULL
+);
+
+--create RequereAtendimentoExame table
+CREATE TABLE requere_atendimento_exame (
+    codigo_atendimento NUMBER,
+    codigo_exame NUMBER,
+    resultado VARCHAR2(100),
+    timestamp_coleta TIMESTAMP,
+    timestamp_liberacao TIMESTAMP,
+    preco NUMBER,
+    CONSTRAINT PRIMARY KEY (codigo_atendimento, codigo_exame),
+    CONSTRAINT fk_codigo_atendimento_requerimento FOREIGN KEY (codigo_atendimento) REFERENCES Atendimento(codigo),
+    CONSTRAINT fk_codigo_exame_requerimento FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
+);
+
+--create AtendeMedicoRequisitanteConvenio table
+CREATE TABLE atende_medico_requisitante_convenio (
+    codigo NUMBER,
+    codigo_ans VARCHAR2(50),
+    CONSTRAINT PRIMARY KEY (codigo, codigo_ans),
+    CONSTRAINT fk_codigo_ans_convenio_atendimento FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
+    CONSTRAINT fk_codigo_medico_requisitante_atendimento FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
+);
+
+--create EstaAtendimentoFormasPagamento table
+CREATE TABLE esta_atendimento_formas_pagamento (
+    codigo NUMBER,
+    id_formas_pagamento NUMBER, 
+    valor NUMBER,
+    CONSTRAINT PRIMARY KEY (codigo, id_formas_pagamento),
+    CONSTRAINT fk_codigo_atendimento_valor FOREIGN KEY (codigo) REFERENCES Atendimento(codigo),
+    CONSTRAINT fk_codigo_formas_pagamento_atendimento FOREIGN KEY (id_formas_pagamento) REFERENCES formas_de_pagamento(id)
 );
 
 -- create dependente sequence
@@ -208,6 +240,8 @@ CREATE TABLE Contrata_paciente_convenio (
 );
 
 -- drop all tables and sequences
+DROP TABLE requere_atendimento_exame;
+DROP TABLE esta_atendimento_formas_pagamento;
 DROP TABLE atendimento;
 DROP TABLE Fone_medico_requisitante;
 DROP TABLE dependente;
@@ -217,6 +251,7 @@ DROP TABLE paciente;
 DROP TABLE requisita_medico_requisitante_exame;
 DROP TABLE Prove_exame_convenio;
 DROP TABLE exame;
+DROP TABLE atende_medico_requisitante_convenio;
 DROP TABLE MedicoRequisitante;
 DROP TABLE MedicoElaborador;
 DROP TABLE fone_convenio;
