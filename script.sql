@@ -148,7 +148,7 @@ CREATE SEQUENCE formas_de_pagamento_seq
 CREATE TABLE formas_de_pagamento (
     id NUMBER DEFAULT formas_de_pagamento_seq.nextval,
     forma VARCHAR2(100) NOT NULL,
-    CONSTRAINT pk_id_formas_de_pagamento PRIMARY KEY (id),
+    CONSTRAINT pk_id_formas_de_pagamento PRIMARY KEY (id)
 );
 
 -- create atendimento sequence
