@@ -176,10 +176,10 @@ CREATE TABLE atendimento (
 CREATE TABLE requere_atendimento_exame (
     codigo_atendimento NUMBER,
     codigo_exame NUMBER,
-    resultado VARCHAR2(100),
-    timestamp_coleta TIMESTAMP,
-    timestamp_liberacao TIMESTAMP,
-    preco NUMBER,
+    resultado VARCHAR2(500) NOT NULL,
+    timestamp_coleta TIMESTAMP NOT NULL,
+    timestamp_liberacao TIMESTAMP NOT NULL,
+    preco NUMBER NOT NULL,
     CONSTRAINT pk_requerimento PRIMARY KEY (codigo_atendimento, codigo_exame),
     CONSTRAINT fk_codigo_atendimento_requerimento FOREIGN KEY (codigo_atendimento) REFERENCES Atendimento(codigo),
     CONSTRAINT fk_codigo_exame_requerimento FOREIGN KEY (codigo_exame) REFERENCES Exame(codigo)
@@ -187,20 +187,20 @@ CREATE TABLE requere_atendimento_exame (
 
 --create AtendeMedicoRequisitanteConvenio table
 CREATE TABLE atende_medico_requisitante_convenio (
-    codigo NUMBER,
+    codigo_medico_req NUMBER,
     codigo_ans VARCHAR2(50),
-    CONSTRAINT pk_atendimento_medico_convenio PRIMARY KEY (codigo, codigo_ans),
+    CONSTRAINT pk_atendimento_medico_convenio PRIMARY KEY (codigo_medico_req, codigo_ans),
     CONSTRAINT fk_codigo_ans_convenio_atendimento FOREIGN KEY (codigo_ans) REFERENCES Convenio(codigo_ans),
-    CONSTRAINT fk_codigo_medico_requisitante_atendimento FOREIGN KEY (codigo) REFERENCES MedicoRequisitante(codigo)
+    CONSTRAINT fk_codigo_medico_requisitante_atendimento FOREIGN KEY (codigo_medico_req) REFERENCES MedicoRequisitante(codigo)
 );
 
 --create EstaAtendimentoFormasPagamento table
 CREATE TABLE esta_atendimento_formas_pagamento (
-    codigo NUMBER,
+    codigo_atendimento NUMBER,
     id_formas_pagamento NUMBER, 
-    valor NUMBER,
-    CONSTRAINT pk_atendimento_formas_pagamento PRIMARY KEY (codigo, id_formas_pagamento),
-    CONSTRAINT fk_codigo_atendimento_valor FOREIGN KEY (codigo) REFERENCES Atendimento(codigo),
+    valor NUMBER NOT NULL,
+    CONSTRAINT pk_atendimento_formas_pagamento PRIMARY KEY (codigo_atendimento, id_formas_pagamento),
+    CONSTRAINT fk_codigo_atendimento_valor FOREIGN KEY (codigo_atendimento) REFERENCES Atendimento(codigo),
     CONSTRAINT fk_codigo_formas_pagamento_atendimento FOREIGN KEY (id_formas_pagamento) REFERENCES formas_de_pagamento(id)
 );
 
