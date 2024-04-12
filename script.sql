@@ -15,7 +15,8 @@ DROP SEQUENCE exame_seq;
 DROP SEQUENCE atendimento_seq;
 DROP SEQUENCE dependente_seq;
 DROP SEQUENCE contrata_paciente_convenio_seq;
-
+DROP SEQUENCE medicoreq_seq;
+DROP SEQUENCE medicoelb_seq;
 
 -- create Paciente table
 CREATE TABLE paciente (
@@ -39,10 +40,16 @@ CREATE TABLE Fone_paciente (
     FOREIGN KEY (cpf) REFERENCES Paciente(cpf)
 );
 
--- faltou criar as sequencias pro codigo de medicoreq e medicoelab
+-- create MedicoRequisitante sequence
+CREATE SEQUENCE medicoreq_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
 -- create MedicoRequisitante table
 CREATE TABLE MedicoRequisitante (
-    codigo NUMBER PRIMARY KEY,
+    codigo NUMBER DEFAULT medicoreq_seq.nextval PRIMARY KEY,
     cpf VARCHAR2(11) NOT NULL,
     cnpj VARCHAR2(14) NOT NULL,
     CRM_numero VARCHAR2(6) NOT NULL,
@@ -83,9 +90,16 @@ CREATE TABLE Prove_exame_convenio (
     FOREIGN KEY (codigo_ANS) REFERENCES Convenio(codigo_ANS)
 );
 
+-- create MedicoElaborador sequence
+CREATE SEQUENCE medicoelb_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
 -- create MedicoElaborador table
 CREATE TABLE MedicoElaborador (
-    codigo NUMBER PRIMARY KEY,
+    codigo NUMBER DEFAULT medicoelb_seq.nextval  PRIMARY KEY,
     cpf VARCHAR2(11) NOT NULL,
     cnpj VARCHAR2(14) NOT NULL,
     CRM_numero VARCHAR2(6) NOT NULL,
