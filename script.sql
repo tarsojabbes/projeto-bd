@@ -240,6 +240,44 @@ CREATE TABLE Contrata_paciente_convenio (
 );
 
 -- drop all tables and sequences
+ALTER TABLE requere_atendimento_exame DROP CONSTRAINT pk_requerimento;
+ALTER TABLE requere_atendimento_exame DROP CONSTRAINT fk_codigo_atendimento_requerimento;
+ALTER TABLE requere_atendimento_exame DROP CONSTRAINT fk_codigo_exame_requerimento;
+ALTER TABLE esta_atendimento_formas_pagamento DROP CONSTRAINT pk_atendimento_formas_pagamento;
+ALTER TABLE esta_atendimento_formas_pagamento DROP CONSTRAINT fk_codigo_atendimento_valor;
+ALTER TABLE esta_atendimento_formas_pagamento DROP CONSTRAINT fk_codigo_formas_pagamento_atendimento;
+
+ALTER TABLE atendimento DROP CONSTRAINT pk_atendimento;
+ALTER TABLE atendimento DROP CONSTRAINT fk_atendimento_cpf_paciente;
+ALTER TABLE atendimento DROP CONSTRAINT fk_atendimento_codigo_medico_requisitante;
+ALTER TABLE atendimento DROP CONSTRAINT fk_atendimento_codigo_ans_convenio;
+ALTER TABLE Fone_medico_requisitante DROP CONSTRAINT pk_fone_medico_requisitante;
+ALTER TABLE Fone_medico_requisitante DROP CONSTRAINT fk_fone_medico_requisitante;
+ALTER TABLE dependente DROP CONSTRAINT pk_dependente;
+ALTER TABLE dependente DROP CONSTRAINT fk_dependente_codigo_medico_elaborador;
+ALTER TABLE Contrata_paciente_convenio DROP CONSTRAINT pk_contrato_paciente_convenio;
+ALTER TABLE Contrata_paciente_convenio DROP CONSTRAINT fk_contrato_cpf_paciente;
+ALTER TABLE contrata_paciente_convenio DROP CONSTRAINT fk_contrato_codigo_ans_convenio;
+ALTER TABLE Fone_paciente DROP CONSTRAINT pk_fone_paciente;
+ALTER TABLE Fone_paciente DROP CONSTRAINT fk_fone_paciente;
+ALTER TABLE Paciente DROP CONSTRAINT pk_cpf_paciente;
+ALTER TABLE Requisita_medico_requisitante_exame DROP CONSTRAINT pk_requisita_medico;
+ALTER TABLE Requisita_medico_requisitante_exame DROP CONSTRAINT fk_requisita_medico_codigo_medico;
+ALTER TABLE Requisita_medico_requisitante_exame DROP CONSTRAINT fk_requisita_medico_codigo_exame;
+ALTER TABLE Prove_exame_convenio DROP CONSTRAINT pk_prove_exame_convenio;
+ALTER TABLE Prove_exame_convenio DROP CONSTRAINT fk_prove_exame_codigo;
+ALTER TABLE Prove_exame_convenio DROP CONSTRAINT fk_prove_convenio_codigo;
+ALTER TABLE exame DROP CONSTRAINT fk_codigo_medico_elaborador;
+ALTER TABLE exame DROP CONSTRAINT pk_codigo_exame;
+ALTER TABLE atende_medico_requisitante_convenio DROP CONSTRAINT pk_atendimento_medico_convenio;
+ALTER TABLE atende_medico_requisitante_convenio DROP CONSTRAINT fk_codigo_ans_convenio_atendimento;
+ALTER TABLE atende_medico_requisitante_convenio DROP CONSTRAINT fk_codigo_medico_requisitante_atendimento;
+ALTER TABLE MedicoRequisitante DROP CONSTRAINT pk_codigo_requisitante;
+ALTER TABLE MedicoElaborador DROP CONSTRAINT pk_codigo_elaborador;
+ALTER TABLE fone_convenio DROP CONSTRAINT pk_fone_convenio;
+ALTER TABLE fone_convenio DROP CONSTRAINT fk_codigo_ans_convenio;
+ALTER TABLE convenio DROP CONSTRAINT pk_codigo_ans_convenio;
+ALTER TABLE formas_de_pagamento DROP CONSTRAINT pk_id_formas_de_pagamento;
 DROP TABLE requere_atendimento_exame;
 DROP TABLE esta_atendimento_formas_pagamento;
 DROP TABLE atendimento;
