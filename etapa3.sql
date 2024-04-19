@@ -12,6 +12,13 @@ WHERE NOT EXISTS (
     )
 );
 
+-- Consulta 6: Liste os médicos elaboradores com mais de 2 dependentes.
+SELECT M.CODIGO, M.NOME, COUNT(D.CODIGO_DEPENDENTE) AS NUM_DEPENDENTES
+FROM MEDICO_ELABORADOR M
+LEFT JOIN DEPENDENTE D ON M.CODIGO = D.CODIGO_MEDICO_ELABORADOR
+GROUP BY M.CODIGO, M.NOME
+HAVING COUNT(D.CODIGO_DEPENDENTE) > 2;
+
 -- Consulta 9: Mostre a quantidade de vezes que cada pagamento foi utilizado por mês.
 SELECT 
     TO_CHAR(A.DATA_ATENDIMENTO, 'MM/YYYY') AS MES_ANO,
