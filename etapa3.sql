@@ -12,6 +12,14 @@ WHERE NOT EXISTS (
     )
 );
 
+-- Consulta 5: Liste o código ans e o nome dos convênios que possuem atendimentos no mês 04/2024.
+
+SELECT c.codigo_ans, c.nome
+FROM atendimento atd
+JOIN convenio c ON atd.codigo_ans = c.codigo_ans
+WHERE EXTRACT(MONTH FROM atd.data_atendimento) = 4
+  AND EXTRACT(YEAR FROM atd.data_atendimento) = 2024;
+
 -- Consulta 6: Liste os médicos elaboradores com mais de 2 dependentes.
 SELECT M.CODIGO, M.NOME, COUNT(D.CODIGO_DEPENDENTE) AS NUM_DEPENDENTES
 FROM MEDICO_ELABORADOR M
