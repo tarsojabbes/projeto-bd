@@ -12,6 +12,12 @@ WHERE NOT EXISTS (
     )
 );
 
+-- Consulta 3: Liste o nome e o código dos médicos elaboradores e a quantidade de dependentes.
+SELECT M.NOME, M.CODIGO, COUNT(D.CODIGO_DEPENDENTE) AS NUM_DEPENDENTES
+FROM MEDICO_ELABORADOR M
+LEFT JOIN DEPENDENTE D ON M.CODIGO = D.CODIGO_MEDICO_ELABORADOR
+GROUP BY M.NOME, M.CODIGO
+
 -- Consulta 5: Liste o código ans e o nome dos convênios que possuem atendimentos no mês 04/2024.
 
 SELECT c.codigo_ans, c.nome
