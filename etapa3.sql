@@ -12,6 +12,21 @@ WHERE NOT EXISTS (
     )
 );
 
+-- Consulta 2: 2. Liste o nome e preço dos Exame e o nome do Convênio que oferece, ordenado pelo nome do convênio e o preço do exame de forma crescente.
+SELECT 
+    C.NOME AS NOME_CONVENIO,
+    E.NOME_EXAME,
+    EP.PRECO
+FROM 
+    CONVENIO C
+JOIN 
+    EXAME_PROVIDO EP ON C.CODIGO_ANS = EP.CODIGO_ANS
+JOIN 
+    EXAME E ON EP.CODIGO_EXAME = E.CODIGO
+ORDER BY 
+    C.NOME ASC,
+    EP.PRECO ASC;
+
 -- Consulta 3: Liste o nome e o código dos médicos elaboradores e a quantidade de dependentes.
 SELECT M.NOME, M.CODIGO, COUNT(D.CODIGO_DEPENDENTE) AS NUM_DEPENDENTES
 FROM MEDICO_ELABORADOR M
