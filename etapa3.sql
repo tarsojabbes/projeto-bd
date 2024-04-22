@@ -33,6 +33,13 @@ FROM MEDICO_ELABORADOR M
 LEFT JOIN DEPENDENTE D ON M.CODIGO = D.CODIGO_MEDICO_ELABORADOR
 GROUP BY M.NOME, M.CODIGO
 
+-- Consulta 4: Liste o nome dos convênios e quantidade de atendimentos, deve ser listado apenas aqueles com número de atendimentos maior que 5.
+    SELECT C.NOME AS CONVENIO, COUNT(A.CODIGO) AS QUANTIDADE_ATENDIMENTOS
+FROM CONVENIO C
+INNER JOIN ATENDIMENTO A ON C.CODIGO_ANS = A.CODIGO_ANS
+GROUP BY C.NOME
+HAVING COUNT(A.CODIGO) > 5;
+
 -- Consulta 5: Liste o código ans e o nome dos convênios que possuem atendimentos no mês 04/2024.
 
 SELECT c.codigo_ans, c.nome
