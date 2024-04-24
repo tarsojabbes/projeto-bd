@@ -55,6 +55,30 @@ LEFT JOIN DEPENDENTE D ON M.CODIGO = D.CODIGO_MEDICO_ELABORADOR
 GROUP BY M.CODIGO, M.NOME
 HAVING COUNT(D.CODIGO_DEPENDENTE) > 2;
 
+-- Consulta 7: Liste a quantidade de pacientes por estado, ordenado pela quantidade de forma decrescente.
+SELECT
+    END_ESTADO,
+    COUNT(*) AS QUANTIDADE_PACIENTES
+FROM
+    PACIENTE
+GROUP BY
+    END_ESTADO
+ORDER BY
+    QUANTIDADE_PACIENTES DESC;
+
+-- Consulta 8: Liste o nome dos pacientes que utilizaram mais de uma forma de pagamento em um atendimento.
+SELECT DISTINCT
+    P.NOME
+FROM
+    PACIENTE P
+    JOIN ATENDIMENTO A ON P.CPF = A.CPF_PACIENTE
+    JOIN FORMAS_PAGAMENTO_ATENDIMENTO FPA ON A.CODIGO = FPA.CODIGO_ATENDIMENTO
+GROUP BY
+    P.NOME,
+    A.CODIGO
+HAVING
+    COUNT(DISTINCT FPA.CODIGO_FORMA_PAGAMENTO) > 1;
+
 -- Consulta 9: Mostre a quantidade de vezes que cada pagamento foi utilizado por mês.
 SELECT 
     TO_CHAR(A.DATA_ATENDIMENTO, 'MM/YYYY') AS MES_ANO,
