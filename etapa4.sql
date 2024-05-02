@@ -79,6 +79,18 @@ BEGIN
     :NEW.DATA_ADMISSAO := CURRENT_DATE;
 END;
 
+
+-- Consulta 9: Crie um trigger que verifica se o salário de um médico elaborador é positivo após inserção de um novo médico e de atualização do seu salário.
+CREATE OR REPLACE TRIGGER trigger_verifica_salario_medico_elaborador
+AFTER INSERT OR UPDATE ON MEDICO_ELABORADOR
+FOR EACH ROW
+BEGIN
+    IF :NEW.SALARIO < 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'O salário precisa ter um valor positivo.');
+    END IF;
+END;
+
+
 -- Consulta 10: Crie um trigger que verifica se um médico requisitante está tentando requisitar um exame para um paciente que não está registrado no mesmo convênio que o médico
 CREATE TRIGGER verifica_convenio_medico_paciente
 BEFORE INSERT ON EXAME_REQUERIDO_ATENDIMENTO
