@@ -71,6 +71,14 @@ EXCEPTION
         		DBMS_OUTPUT.PUT_LINE('Ocorreu um erro ao remover o exame.');
 END;
 
+-- Consulta 8: Crie um trigger que registra a data de admissão sempre que um novo médico elaborador é adicionado no sistema
+CREATE OR REPLACE TRIGGER trigger_registrar_data_admissao
+BEFORE INSERT ON MEDICO_ELABORADOR
+FOR EACH ROW
+BEGIN
+    :NEW.DATA_ADMISSAO := CURRENT_DATE;
+END;
+
 -- Consulta 10: Crie um trigger que verifica se um médico requisitante está tentando requisitar um exame para um paciente que não está registrado no mesmo convênio que o médico
 CREATE TRIGGER verifica_convenio_medico_paciente
 BEFORE INSERT ON EXAME_REQUERIDO_ATENDIMENTO
