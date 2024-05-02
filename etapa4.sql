@@ -34,6 +34,15 @@ JOIN
 WHERE 
     EXTRACT(YEAR FROM A.DATA_ATENDIMENTO) = 2024;
 
+/* Consulta 4: Crie uma view que liste o código e nome dos médicos elaboradores que realizaram exames de método digital, bem como a classe dos exames realizados. */
+CREATE VIEW MEDICOS_EXAMES_DIGITAIS_VIEW AS
+SELECT ME.CODIGO AS CODIGO_MEDICO,
+       ME.NOME AS NOME_MEDICO,
+       E.CLASSE_EXAME
+FROM MEDICO_ELABORADOR ME
+JOIN EXAME E ON ME.CODIGO = E.CODIGO_MEDICO_ELABORADOR
+WHERE E.METODO = 'Digital';
+
 /* Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, 
 verificando antes se o exame de fato foi realizado pelo paciente de cpf informado. */
 CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
