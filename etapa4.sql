@@ -34,7 +34,6 @@ JOIN
 WHERE 
     EXTRACT(YEAR FROM A.DATA_ATENDIMENTO) = 2024;
 
-
 /* Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, 
 verificando antes se o exame de fato foi realizado pelo paciente de cpf informado. */
 CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
@@ -72,19 +71,48 @@ EXCEPTION
         		DBMS_OUTPUT.PUT_LINE('Ocorreu um erro ao remover o exame.');
 END;
 
--- Consulta 10: Crie um trigger que verifica se o email de um médico elaborador é válido (possui um caractere ‘@’), sempre que um médico elaborador for adicionado.
-CREATE TRIGGER verifica_email_medico_elaborador
-BEFORE INSERT ON MEDICO_ELABORADOR
+-- Consulta 10: Crie um trigger que verifica se um médico requisitante está tentando requisitar um exame para um paciente que não está registrado no mesmo convênio que o médico
+CREATE TRIGGER verifica_convenio_medico_paciente
+BEFORE INSERT ON EXAME_REQUERIDO_ATENDIMENTO
 FOR EACH ROW
 DECLARE
-    v_email_valido NUMBER;
+    TYPE convenios_medicos IS TABLE OF CONVENIO_MEDICO_REQUISITANTE.CODIGO_ANS%TYPE;
+    TYPE convenios_paciente IS TABLE OF PACIENTE_CONVENIO.CODIGO_ANS%TYPE;
+
+    conv_medico convenios_medicos;
+    conv_paciente convenios_paciente;
+    intersecao BOOLEAN := FALSE;
 BEGIN
-    IF :NEW.EMAIL IS NOT NULL THEN
-        v_email_valido := INSTR(:NEW.EMAIL, '@');
-        IF v_email_valido = 0 THEN
-            RAISE_APPLICATION_ERROR(-20001, 'O email do médico elaborador deve conter o caractere "@".');
+
+    SELECT CODIGO_ANS BULK COLLECT INTO conv_medico
+    FROM CONVENIO_MEDICO_REQUISITANTE CMR
+    WHERE CMR.CODIGO_MEDICO_REQUISITANTE = (
+        SELECT CODIGO_MEDICO_REQUISITANTE
+        FROM ATENDIMENTO
+        WHERE CODIGO = :NEW.CODIGO_ATENDIMENTO
+    );
+
+    SELECT CODIGO_ANS BULK COLLECT INTO conv_paciente
+    FROM PACIENTE_CONVENIO PC
+    WHERE PC.CPF_PACIENTE = (
+        SELECT CPF_PACIENTE
+        FROM ATENDIMENTO
+        WHERE CODIGO = :NEW.CODIGO_ATENDIMENTO
+    );
+
+    FOR i IN 1..conv_medico.COUNT LOOP
+        FOR j IN 1..conv_paciente.COUNT LOOP
+            IF conv_medico(i) = conv_paciente(j) THEN
+                intersecao := TRUE;
+                EXIT;
+            END IF;
+        END LOOP;
+        IF intersecao THEN
+            EXIT;
         END IF;
+    END LOOP;
+
+    IF NOT intersecao THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Médico e Paciente não são do mesmo convênio');
     END IF;
 END;
-/
-
