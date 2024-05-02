@@ -36,7 +36,7 @@ WHERE
 
 /* Consulta 2: Crie uma view que liste todos os pacientes que realizaram atendimentos com
 médicos requisitantes especialistas em ortopedia  */
-CREATE VIEW PACIENTES_ORTOPEDIA AS
+CREATE VIEW PACIENTES_ORTOPEDIA_VIEW AS
 SELECT DISTINCT P.*
 FROM PACIENTE P
 JOIN ATENDIMENTO A ON P.CPF = A.CPF_PACIENTE
