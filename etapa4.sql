@@ -34,6 +34,15 @@ JOIN
 WHERE 
     EXTRACT(YEAR FROM A.DATA_ATENDIMENTO) = 2024;
 
+/* Consulta 2: Crie uma view que liste todos os pacientes que realizaram atendimentos com
+médicos requisitantes especialistas em ortopedia  */
+CREATE VIEW PACIENTES_ORTOPEDIA AS
+SELECT DISTINCT P.*
+FROM PACIENTE P
+JOIN ATENDIMENTO A ON P.CPF = A.CPF_PACIENTE
+JOIN MEDICO_REQUISITANTE MR ON A.CODIGO_MEDICO_REQUISITANTE = MR.CODIGO
+WHERE MR.ESPECIALIDADE = 'Ortopedia';
+
 /* Consulta 4: Crie uma view que liste o código e nome dos médicos elaboradores que realizaram exames de método digital, bem como a classe dos exames realizados. */
 CREATE VIEW MEDICOS_EXAMES_DIGITAIS_VIEW AS
 SELECT ME.CODIGO AS CODIGO_MEDICO,
