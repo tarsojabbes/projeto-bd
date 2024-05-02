@@ -39,15 +39,15 @@ WHERE
 verificando antes se o exame de fato foi realizado pelo paciente de cpf informado. */
 CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
 IS	
-    v_exame_encontrado NUMBER := 0;
+    exame_encontrado NUMBER := 0;
 BEGIN
-	SELECT COUNT(*) INTO v_exame_encontrado
+	SELECT COUNT(*) INTO exame_encontrado
     FROM EXAME_REQUERIDO_ATENDIMENTO E, ATENDIMENTO A
     WHERE A.CODIGO = E.CODIGO_ATENDIMENTO AND 
         A.CPF_PACIENTE = p_cpf_paciente AND
 	    E.CODIGO_EXAME = p_codigo_exame;
 
-    IF  v_exame_encontrado > 0 THEN
+    IF  exame_encontrado > 0 THEN
 
         DELETE FROM EXAME_REQUERIDO_ATENDIMENTO
         WHERE CODIGO_ATENDIMENTO IN (
