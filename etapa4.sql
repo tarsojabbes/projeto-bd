@@ -34,6 +34,44 @@ JOIN
 WHERE 
     EXTRACT(YEAR FROM A.DATA_ATENDIMENTO) = 2024;
 
+
+/* Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, 
+verificando antes se o exame de fato foi realizado pelo paciente de cpf informado. */
+CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
+IS	
+    v_exame_encontrado NUMBER := 0;
+BEGIN
+	SELECT COUNT(*) INTO v_exame_encontrado
+    FROM EXAME_REQUERIDO_ATENDIMENTO E, ATENDIMENTO A
+    WHERE A.CODIGO = E.CODIGO_ATENDIMENTO AND 
+        A.CPF_PACIENTE = p_cpf_paciente AND
+	    E.CODIGO_EXAME = p_codigo_exame;
+
+    IF  v_exame_encontrado > 0 THEN
+
+        DELETE FROM EXAME_REQUERIDO_ATENDIMENTO
+        WHERE CODIGO_ATENDIMENTO IN (
+            SELECT A.CODIGO
+            FROM EXAME_REQUERIDO_ATENDIMENTO E, ATENDIMENTO A
+            WHERE A.CODIGO = E.CODIGO_ATENDIMENTO AND 
+                A.CPF_PACIENTE = p_cpf_paciente AND
+                E.CODIGO_EXAME = p_codigo_exame
+        );
+
+	    DELETE FROM EXAME
+	    WHERE CODIGO = p_codigo_exame;
+	
+	    DBMS_OUTPUT.PUT_LINE('Exame removido com sucesso.');
+    ELSE
+       		DBMS_OUTPUT.PUT_LINE('O exame não foi encontrado para o paciente informado.');
+   	END IF;
+EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+        		DBMS_OUTPUT.PUT_LINE('O paciente ou o exame não foram encontrados.');
+    	WHEN OTHERS THEN
+        		DBMS_OUTPUT.PUT_LINE('Ocorreu um erro ao remover o exame.');
+END;
+
 -- Consulta 10: Crie um trigger que verifica se o email de um médico elaborador é válido (possui um caractere ‘@’), sempre que um médico elaborador for adicionado.
 CREATE TRIGGER verifica_email_medico_elaborador
 BEFORE INSERT ON MEDICO_ELABORADOR
