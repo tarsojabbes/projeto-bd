@@ -42,6 +42,24 @@ JOIN ATENDIMENTO A ON P.CPF = A.CPF_PACIENTE
 JOIN MEDICO_REQUISITANTE MR ON A.CODIGO_MEDICO_REQUISITANTE = MR.CODIGO
 WHERE MR.ESPECIALIDADE = 'Ortopedia';
 
+
+-- Crie uma view que liste todos os médicos elaboradores que possuem CRM no estado de São Paulo, bem como a quantidade de exames que cada um deles realizou, agrupados por especialidade
+
+CREATE VIEW MEDICOS_SAO_PAULO_EXAMES AS
+SELECT
+    ME.CODIGO AS CODIGO_MEDICO,
+    ME.NOME AS NOME_MEDICO,
+    ME.ESPECIALIDADE,
+    COUNT(EX.CODIGO) AS QUANTIDADE_EXAMES_REALIZADOS
+FROM
+    MEDICO_ELABORADOR ME,
+    EXAME EX
+WHERE
+    ME.CODIGO = EX.CODIGO_MEDICO_ELABORADOR
+    AND ME.CRM_ESTADO = 'São Paulo'
+GROUP BY
+    ME.CODIGO, ME.NOME, ME.ESPECIALIDADE;
+
 -- Consulta 4: Crie uma view que liste o código e nome dos médicos elaboradores que realizaram exames de método digital, bem como a classe dos exames realizados.
 CREATE VIEW MEDICOS_EXAMES_DIGITAIS_VIEW AS
 SELECT ME.CODIGO AS CODIGO_MEDICO,
@@ -50,6 +68,22 @@ SELECT ME.CODIGO AS CODIGO_MEDICO,
 FROM MEDICO_ELABORADOR ME
 JOIN EXAME E ON ME.CODIGO = E.CODIGO_MEDICO_ELABORADOR
 WHERE E.METODO = 'Digital';
+
+
+-- Consulta 5: Crie uma procedure que transfere todos os atendimentos de determinado paciente de um médico requisitante para outro, recebendo o cpf de um paciente, o código de seu médico requisitante atual e o código de seu novo médico.
+
+CREATE OR REPLACE PROCEDURE TRANSFERE_ATENDIMENTOS(
+    p_cpf_paciente IN ATENDIMENTO.CPF_PACIENTE%TYPE,
+    p_codigo_medico_atual IN INTEGER,
+    p_codigo_novo_medico IN INTEGER
+)
+IS
+BEGIN
+    UPDATE ATENDIMENTO
+    SET CODIGO_MEDICO_REQUISITANTE = p_codigo_novo_medico
+    WHERE CPF_PACIENTE = p_cpf_paciente
+    AND CODIGO_MEDICO_REQUISITANTE = p_codigo_medico_atual;
+END
 
 -- Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, verificando antes se o exame de fato foi realizado pelo paciente de cpf informado.
 CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
