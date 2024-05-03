@@ -34,8 +34,7 @@ JOIN
 WHERE 
     EXTRACT(YEAR FROM A.DATA_ATENDIMENTO) = 2024;
 
-/* Consulta 2: Crie uma view que liste todos os pacientes que realizaram atendimentos com
-médicos requisitantes especialistas em ortopedia  */
+-- Consulta 2: Crie uma view que liste todos os pacientes que realizaram atendimentos com médicos requisitantes especialistas em ortopedia
 CREATE VIEW PACIENTES_ORTOPEDIA_VIEW AS
 SELECT DISTINCT P.*
 FROM PACIENTE P
@@ -43,7 +42,7 @@ JOIN ATENDIMENTO A ON P.CPF = A.CPF_PACIENTE
 JOIN MEDICO_REQUISITANTE MR ON A.CODIGO_MEDICO_REQUISITANTE = MR.CODIGO
 WHERE MR.ESPECIALIDADE = 'Ortopedia';
 
-/* Consulta 4: Crie uma view que liste o código e nome dos médicos elaboradores que realizaram exames de método digital, bem como a classe dos exames realizados. */
+-- Consulta 4: Crie uma view que liste o código e nome dos médicos elaboradores que realizaram exames de método digital, bem como a classe dos exames realizados.
 CREATE VIEW MEDICOS_EXAMES_DIGITAIS_VIEW AS
 SELECT ME.CODIGO AS CODIGO_MEDICO,
        ME.NOME AS NOME_MEDICO,
@@ -52,8 +51,7 @@ FROM MEDICO_ELABORADOR ME
 JOIN EXAME E ON ME.CODIGO = E.CODIGO_MEDICO_ELABORADOR
 WHERE E.METODO = 'Digital';
 
-/* Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, 
-verificando antes se o exame de fato foi realizado pelo paciente de cpf informado. */
+-- Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, verificando antes se o exame de fato foi realizado pelo paciente de cpf informado.
 CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
 IS	
     exame_encontrado NUMBER := 0;
@@ -88,6 +86,17 @@ EXCEPTION
     	WHEN OTHERS THEN
         		DBMS_OUTPUT.PUT_LINE('Ocorreu um erro ao remover o exame.');
 END;
+
+-- Consulta 7: Crie uma função que receba a data de nascimento de um paciente e calcule a sua idade, considerando a data corrente.
+CREATE OR REPLACE FUNCTION CALCULA_IDADE (
+    data_nascimento IN DATE
+) RETURN NUMBER IS
+    idade NUMBER;
+BEGIN
+    SELECT TRUNC(MONTHS_BETWEEN(SYSDATE, data_nascimento) / 12) INTO idade FROM DUAL;
+    RETURN idade;
+END CALCULA_IDADE;
+/
 
 -- Consulta 8: Crie um trigger que registra a data de admissão sempre que um novo médico elaborador é adicionado no sistema
 CREATE OR REPLACE TRIGGER trigger_registrar_data_admissao
