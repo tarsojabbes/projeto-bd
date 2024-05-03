@@ -97,7 +97,6 @@ BEGIN
 	    E.CODIGO_EXAME = codigoExame;
 
     IF  exame_encontrado > 0 THEN
-
         DELETE FROM EXAME_REQUERIDO_ATENDIMENTO
         WHERE CODIGO_ATENDIMENTO IN (
             SELECT A.CODIGO
@@ -106,19 +105,9 @@ BEGIN
                 A.CPF_PACIENTE = cpfPaciente AND
                 E.CODIGO_EXAME = codigoExame
         );
-
-	    DELETE FROM EXAME
-	    WHERE CODIGO = codigoExame;
-	
-	    DBMS_OUTPUT.PUT_LINE('Exame removido com sucesso.');
     ELSE
-       		DBMS_OUTPUT.PUT_LINE('O exame não foi encontrado para o paciente informado.');
+       		RAISE_APPLICATION_ERROR(-20001,'Não encontramos o exame para o paciente informado');
    	END IF;
-EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-        		DBMS_OUTPUT.PUT_LINE('O paciente ou o exame não foram encontrados.');
-    	WHEN OTHERS THEN
-        		DBMS_OUTPUT.PUT_LINE('Ocorreu um erro ao remover o exame.');
 END;
 
 -- Consulta 7: Crie uma função que receba a data de nascimento de um paciente e calcule a sua idade, considerando a data corrente.
