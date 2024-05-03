@@ -2,6 +2,8 @@
 CREATE VIEW ATENDIMENTOS_2024_VIEW AS
 SELECT 
     A.CODIGO AS CODIGO_ATENDIMENTO,
+    A.CODIGO_ANS,
+    A.DATA_ATENDIMENTO,
     A.CPF_PACIENTE,
     P.NOME AS NOME_PACIENTE,
     P.EMAIL AS EMAIL_PACIENTE,
@@ -43,8 +45,7 @@ JOIN MEDICO_REQUISITANTE MR ON A.CODIGO_MEDICO_REQUISITANTE = MR.CODIGO
 WHERE MR.ESPECIALIDADE = 'Ortopedia';
 
 
--- Crie uma view que liste todos os médicos elaboradores que possuem CRM no estado de São Paulo, bem como a quantidade de exames que cada um deles realizou, agrupados por especialidade
-
+-- Consulta 3: Crie uma view que liste todos os médicos elaboradores que possuem CRM no estado de São Paulo, bem como a quantidade de exames que cada um deles realizou, agrupados por especialidade
 CREATE VIEW MEDICOS_SAO_PAULO_EXAMES AS
 SELECT
     ME.CODIGO AS CODIGO_MEDICO,
@@ -71,7 +72,6 @@ WHERE E.METODO = 'Digital';
 
 
 -- Consulta 5: Crie uma procedure que transfere todos os atendimentos de determinado paciente de um médico requisitante para outro, recebendo o cpf de um paciente, o código de seu médico requisitante atual e o código de seu novo médico.
-
 CREATE OR REPLACE PROCEDURE TRANSFERE_ATENDIMENTOS(
     p_cpf_paciente IN ATENDIMENTO.CPF_PACIENTE%TYPE,
     p_codigo_medico_atual IN INTEGER,
@@ -129,8 +129,7 @@ CREATE OR REPLACE FUNCTION CALCULA_IDADE (
 BEGIN
     SELECT TRUNC(MONTHS_BETWEEN(SYSDATE, data_nascimento) / 12) INTO idade FROM DUAL;
     RETURN idade;
-END CALCULA_IDADE;
-/
+END;
 
 -- Consulta 8: Crie um trigger que registra a data de admissão sempre que um novo médico elaborador é adicionado no sistema
 CREATE OR REPLACE TRIGGER trigger_registrar_data_admissao
