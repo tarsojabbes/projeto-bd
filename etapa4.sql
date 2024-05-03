@@ -86,15 +86,15 @@ BEGIN
 END
 
 -- Consulta 6: Crie uma procedure chamada “remove_exame_paciente”, que recebe o cpf de um paciente e o código de um exame e remove este exame do sistema, verificando antes se o exame de fato foi realizado pelo paciente de cpf informado.
-CREATE OR REPLACE PROCEDURE remove_exame_paciente (p_cpf_paciente IN CHAR, p_codigo_exame IN INTEGER)
+CREATE OR REPLACE PROCEDURE remove_exame_paciente (cpfPaciente IN CHAR, codigoExame IN INTEGER)
 IS	
     exame_encontrado NUMBER := 0;
 BEGIN
 	SELECT COUNT(*) INTO exame_encontrado
     FROM EXAME_REQUERIDO_ATENDIMENTO E, ATENDIMENTO A
     WHERE A.CODIGO = E.CODIGO_ATENDIMENTO AND 
-        A.CPF_PACIENTE = p_cpf_paciente AND
-	    E.CODIGO_EXAME = p_codigo_exame;
+        A.CPF_PACIENTE = cpfPaciente AND
+	    E.CODIGO_EXAME = codigoExame;
 
     IF  exame_encontrado > 0 THEN
 
@@ -103,12 +103,12 @@ BEGIN
             SELECT A.CODIGO
             FROM EXAME_REQUERIDO_ATENDIMENTO E, ATENDIMENTO A
             WHERE A.CODIGO = E.CODIGO_ATENDIMENTO AND 
-                A.CPF_PACIENTE = p_cpf_paciente AND
-                E.CODIGO_EXAME = p_codigo_exame
+                A.CPF_PACIENTE = cpfPaciente AND
+                E.CODIGO_EXAME = codigoExame
         );
 
 	    DELETE FROM EXAME
-	    WHERE CODIGO = p_codigo_exame;
+	    WHERE CODIGO = codigoExame;
 	
 	    DBMS_OUTPUT.PUT_LINE('Exame removido com sucesso.');
     ELSE
